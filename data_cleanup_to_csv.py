@@ -14,8 +14,8 @@ time_data = df["Time"]
 
 #time step for the slope calculation
 data_size = len(altitude_data)
-max_delta_time : int = 500
 slope_data = np.zeros(data_size, dtype=float)
+delta_distance : int = 100
 
 #create slope data
 print("\nCalculating slope data")
@@ -28,7 +28,7 @@ for i in range(data_size):
             j= j+10
             break
         distance = distance_data[i] - distance_data[j]
-        if distance >= 100:
+        if distance >= delta_distance:
             break
         j = j-10
             
@@ -40,8 +40,31 @@ print("Finished calculating slope data\n")
 
 df.insert(len(df.columns), "Slope", slope_data)
 
-time_data_seconds = np.zeros(data_size, dtype=int)
+#speed data info
+max_delta_time : int = 500
+speed_data = np.zeros(data_size, dtype=float)
 
+print("Calculating speed data")
+
+#time is calculated in seconds, each time step is in seconds
+for i in range(data_size):
+    if i%int(data_size/20)==0:
+        print(f"{i/data_size*100:.2f}%")
+    delta_time = max_delta_time if i >= max_delta_time else i
+    
+    n = distance_data[i] - distance_data[i-delta_time]
+    d = delta_time
+
+    speed_data[i] = n/d if d != 0 else 0
+
+print("Finished calculating speed data\n")
+
+df.insert(len(df.columns), "Speed (m/s)", speed_data)
+
+df["Speed converted (km/h)"] = df["Speed (km/h)"]/3.6
+
+
+time_data_seconds = np.zeros(data_size, dtype=int)
 #edit time format
 start_time : int = 95
 for i in range(data_size):

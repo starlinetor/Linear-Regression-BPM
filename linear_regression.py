@@ -11,7 +11,7 @@ file_name = "2025_08_12_updated"
 
 df = pd.read_csv(f"{file_name}.CSV")
 
-variables : list[str] = ["Slope", "Altitude (m)", "Distances (m)", "Time (s)",  "Speed (km/h)",]
+variables : list[str] = ["Slope", "Altitude (m)", "Distances (m)", "Time (s)",  "Speed (m/s)",]
 
 x = df[variables]
 y = df["HR (bpm)"]
